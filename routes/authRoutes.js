@@ -53,7 +53,7 @@ router.post('/login', async (req, res) => {
 // Obtener lista de usuarios
 router.get('/users', async (req, res) => {
   try {
-    const userList = await User.find({}, 'id email suscripcion');
+    const userList = await User.find({}, 'id email nombre suscripcion');
     res.status(200).json(userList);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener los usuarios', error: error.message });
