@@ -8,13 +8,10 @@ const keysPath = path.resolve("./keys.json");
 const keys = JSON.parse(readFileSync(keysPath, "utf-8"));
 
 // las genere al aplicar : 'npx vapid-key web-push
-const PUBLIC_KEY = "BK1RHJYjGDDugVJDJZkbRtxH1NZplc4z7-eYtv_UUQUcK0zZ4zqjEIhQZcu4r8CxXHS8bxuKCn3LYOFJ3JBCu10";
-const PRIVATE_KEY = "2GLKNIR2WJlHFvuugiIvyy2X-RwnMu-_ppt4xZS0hAE";
-
 webpush.setVapidDetails(
   'mailto:sergio.reyes.21m@utzmg.edu.mx',
-    PUBLIC_KEY,
-    PRIVATE_KEY
+   keys.publicKey,
+   keys.privateKey
 );
 
 // Función para enviar una notificación push
