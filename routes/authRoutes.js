@@ -10,13 +10,20 @@ const suscription = require('../models/suscription.js');
 const router = express.Router();
 
 // Configuración de Web Push con variables de entorno
-const keysPath = path.resolve('../keys.json');
+/* const keysPath = path.resolve('../keys.json');
 const keys = JSON.parse(readFileSync(keysPath, 'utf-8'));
+ */
+
+const vapidKeys={
+  publicKey:  "BK1RHJYjGDDugVJDJZkbRtxH1NZplc4z7-eYtv_UUQUcK0zZ4zqjEIhQZcu4r8CxXHS8bxuKCn3LYOFJ3JBCu10",
+  privateKey:  "2GLKNIR2WJlHFvuugiIvyy2X-RwnMu-_ppt4xZS0hAE"
+}
+
 
 webpush.setVapidDetails(
   'mailto:sergio.reyes.21m@utzmg.edu.mx',
-  keys.publicKey,
-  keys.privateKey
+  vapidKeys.publicKey,
+  vapidKeys.privateKey
 );
 
 // Función auxiliar para buscar usuario por email
