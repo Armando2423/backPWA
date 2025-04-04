@@ -3,8 +3,25 @@ const bcrypt = require('bcrypt');
 const { sendPush, sends } = require('../sendPush.js');
 const suscription = require('../models/suscription.js');
 const User = require('../models/User');
-
 const router = express.Router();
+// web push
+const webpush = require("web-push");
+const keysPath = path.resolve("./keys.json");
+const keys = JSON.parse(readFileSync(keysPath, "utf-8"));
+
+webpush.setVapidDetails(
+  'mailto:sergio.reyes.21m@utzmg.edu.mx',
+  keys.publicKey,
+  keys.privateKey
+);
+
+
+
+// 📌 Función auxiliar para buscar usuario por email
+const findUserByEmail = async (email) => {
+  return await User.findOne({ email });
+};
+
 
 // Registrar usuario
 router.post('/register', async (req, res) => {
@@ -68,7 +85,7 @@ router.post('/suscripcion', async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
       userId, 
-      { suscripcion },
+      { suscripcion},
       { new: true }
     );
 
@@ -84,6 +101,28 @@ router.post('/suscripcion', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// 📌 Enviar notificación PUSH a un usuario por email
+router.post('/send_subscription', async (req, res) => {
+  const { email, title, body } = req.body;
+
+  try {
+    // 🔍 Buscar usuario en la BD
+    const user = await findUserByEmail(email);
+    if (!user || !user.suscripcion) {
+      return res.status(404).json({ error: "Usuario no encontrado o sin suscripción" });
+    }
+
+    const payload = JSON.stringify({ title, body });
+
+    await webpush.sendNotification(user.suscripcion, payload);
+
+    res.status(200).json({ success: true, message: "Notificación enviada" });
+  } catch (err) {
+    res.status(500).json({ error: "Error al enviar la notificación", details: err.message });
+  }
+});
+
 
 // Enviar notificación con la suscripción del usuario
 router.post('/suscripcionMod', async (req, res) => {
