@@ -3,10 +3,11 @@ const bcrypt = require('bcrypt');
 const { sendPush, sends } = require('../sendPush.js');
 const suscription = require('../models/suscription.js');
 const User = require('../models/User');
+
 const router = express.Router();
 // web push
 const webpush = require("web-push");
-const keysPath = path.resolve("./keys.json");
+const keysPath = path.resolve("../keys.json");
 const keys = JSON.parse(readFileSync(keysPath, "utf-8"));
 
 webpush.setVapidDetails(
